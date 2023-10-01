@@ -23,11 +23,21 @@ def check_root_full():
   """Returns True if the root parition is full, False otherwise."""
   return check_disk_full(disk="/", min_gb=2, min_percent=10)
 
+def check_no_network():
+  """Returns True if fails to resolve Google URL, False if succeeds"""
+  try:
+    socket.gethostbyname("www.google.com")
+    return False
+  except:
+    return True
+
 def main():
   checks=[
     (check_reboot, "Pending Reboot"),
-    (check_root_full,  "Root partition full")
+    (check_root_full,  "Root partition full"),
+    (check_no_network, "Netowrk connection issue.")
   ]
+
   everything_ok=True
   for check, msg in checks:
     if check():
